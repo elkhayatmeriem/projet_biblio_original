@@ -6,30 +6,31 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm
 
 
-
 def register_view(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
 
-        # 🔴 bloquer directement si le form n'est pas valide
         if not form.is_valid():
+            print(form.errors)  # 🔥 IMPORTANT DEBUG
             return render(request, "accounts/register.html", {"form": form})
 
-        # ✅ ici tout est valide
-        username = form.cleaned_data["username"]
-        email = form.cleaned_data["email"]
-        password = form.cleaned_data["password"]
+        first_name = form.cleaned_data.get("first_name")
+        last_name = form.cleaned_data.get("last_name")
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
 
-        # check username exist
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Ce nom d'utilisateur existe déjà.")
+        username = email  # simple login
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Cet email existe déjà.")
             return redirect("accounts:register")
 
-        # create user
-        User.objects.create_user(
+        user = User.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
+            first_name=first_name,
+            last_name=last_name
         )
 
         messages.success(request, "Compte créé avec succès")
@@ -39,7 +40,6 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, "accounts/register.html", {"form": form})
-
 
 def login_view(request):
     if request.method == "POST":
@@ -87,10 +87,10 @@ def emprunts(request):
 def penalites(request):
     return render(request, "penalites.html")
 
-
-
 @login_required
 def my_information(request):
     return render(request, "accounts/my_information.html", {
         "user": request.user
     })
+
+

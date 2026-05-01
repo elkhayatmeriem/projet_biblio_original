@@ -5,33 +5,70 @@
 {% block content %}
 <div class="container mt-5">
 
-    <h2 class="mb-4">Mes informations</h2>
+    <div class="row">
 
-    <div class="card shadow-sm p-4">
+        <!-- LEFT SIDEBAR -->
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm">               
 
-        <div class="mb-3">
-            <strong>Nom d'utilisateur :</strong>
-            <p>{{ user.username }}</p>
+                <ul class="list-unstyled">
+                    <li>Mon compte
+                 </li>
+                 <hr>
+                    <li class="mb-2">
+                        <a href="#" class="text-decoration-none text-dark">Mes emprunts</a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="#" class="text-decoration-none text-dark">Mes penalites</a>
+                    </li>
+
+                    <hr>
+
+                    <li class="mb-2">
+                        <a href="{% url 'accounts:logout' %}" class="text-decoration-none" style="color: black;">
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
         </div>
 
-        <div class="mb-3">
-            <strong>Email :</strong>
-            <p>{{ user.email }}</p>
-        </div>
+        <!-- RIGHT CONTENT -->
+        <div class="col-md-9">
 
-        <div class="mb-3">
-            <strong>Nom complet :</strong>
-            <p>{{ user.first_name }} {{ user.last_name }}</p>
-        </div>
+            <h3 class="mb-4">Informations du compte</h3>
 
-        <div class="mb-3">
-            <strong>Date d'inscription :</strong>
-            <p>{{ user.date_joined }}</p>
-        </div>
+            <div class="card shadow-sm p-4">
 
-        <a href="#" class="btn btn-purple">
-            Modifier mes informations
-        </a>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <i class="bi bi-person-circle" style="font-size: 50px; color: #ccc;"></i>
+                    </div>
+
+                    <div>
+                        <h5 class="mb-1">Informations de contact</h5>
+                        <p class="mb-0">{{ user.first_name }} {{ user.last_name }}</p>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div>
+                    <a href="#" class="text-decoration-none me-3">
+                        Éditer 
+                    </a>
+
+                    <a href="#" class="text-decoration-none">
+                        Modifier le mot de passe 
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 

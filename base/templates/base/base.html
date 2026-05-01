@@ -307,9 +307,9 @@ body {
 
                 <!-- SLIDE 3 -->
                 <div class="carousel-item">
-                    <img src="{% static 'images/banner3.png' %}"
+                    <img src="{% static 'images/banner33.jpeg' %}"
                          class="d-block w-100"
-                         style="height: 400px; object-fit: cover;">
+                         style="height: 400px; object-fit: contain;background: #372b24;">
                 </div>
 
             </div>
@@ -442,7 +442,7 @@ body {
 
 <footer class="mt-5">
 
-    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register" and not request.GET.category %}
+    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register my_information" and not request.GET.category %}
     <!-- TOP SECTION -->
     <div style="background:#ffe8f2; color:#700143;" class="py-5">
         <div class="container text-center">
