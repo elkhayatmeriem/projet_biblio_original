@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<style>
+ .btn-purple {
+    background-color: #700143;
+    border: 1px solid #700143;
+    background:#700143;
+    color:white;
+    font-weight:500;
+    font-size: large;
+}
+
+.btn-purple:hover {
+    background-color: #fcd7dd;
+    background:#fcd7dd;
+    border: 1px solid #fcd7dd;
+    color: #700143;
+}
+</style>
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-4">
+
+            <div class="card shadow p-4">
+
+                <h2 class="text-center mb-4" style="color:#700143 ;">
+                    Connexion
+                </h2>
+
+                {% if message %}
+                    <div class="alert alert-warning">
+                        {{ message }}
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- EMAIL -->
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="mb-3">
+                        <label>Mot de passe</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button type="submit" class="btn btn-purple w-100">
+                        Se connecter
+                    </button>
+                </form>
+
+                <p class="text-center mt-3">
+                    Don't have an account?
+                    <a href="{% url 'accounts:register' %}" style="color:#700143 ;">
+                        Créer un compte
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

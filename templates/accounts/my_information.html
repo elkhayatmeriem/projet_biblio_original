@@ -1,0 +1,39 @@
+{% extends "base/base.html" %}
+
+{% block title %}Mes informations{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="mb-4">Mes informations</h2>
+
+    <div class="card shadow-sm p-4">
+
+        <div class="mb-3">
+            <strong>Nom d'utilisateur :</strong>
+            <p>{{ user.username }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Email :</strong>
+            <p>{{ user.email }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Nom complet :</strong>
+            <p>{{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Date d'inscription :</strong>
+            <p>{{ user.date_joined }}</p>
+        </div>
+
+        <a href="#" class="btn btn-purple">
+            Modifier mes informations
+        </a>
+
+    </div>
+
+</div>
+{% endblock %}

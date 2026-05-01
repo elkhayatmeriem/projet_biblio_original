@@ -1,0 +1,23 @@
+{% extends "base/base.html" %}
+
+{% block title %}Détail livre{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>{{ book.title }}</h2>
+
+    <p><strong>Auteur:</strong> {{ book.author }}</p>
+
+    <p><strong>Description:</strong> {{ book.description }}</p>
+
+    {% if book.image %}
+        <img src="{{ book.image }}" class="img-fluid rounded">
+    {% endif %}
+
+    <a href="{% url 'books' %}" class="btn btn-secondary mt-3">
+        Retour
+    </a>
+
+</div>
+{% endblock %}

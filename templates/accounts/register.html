@@ -1,0 +1,91 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Créer un nouveau compte {% endblock %}
+
+{% block content %}
+
+<style>
+  .btn-purple {
+    background-color: #700143  ;
+    border: 1px solid #700143  ;
+    background:#700143  ;
+    color:white;
+    font-weight:500;
+    font-size: large;
+}
+
+.btn-purple:hover {
+    background-color: #fcd7dd;
+    background:#fcd7dd;
+    border: 1px solid #fcd7dd;
+    color: rgb(70, 14, 14) ;
+}
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+
+        <div class="card shadow p-4">
+
+            <h2 class="text-center mb-4" style="color: #700143  ;">Créer un nouveau compte </h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+   
+
+                <div class="mb-3">
+                    <label>Prenom</label>
+                    <input type="text" name="username" class="form-control"
+               value="{{ form.username.value|default:'' }}" required>
+        {{ form.username.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label>nom</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control"
+                    value="{{ form.email.value|default:'' }}" required>
+               {{ form.email.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label>Mot de passe</label>
+                    <input type="password" name="password" class="form-control" required>
+        {{ form.password.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label>Confirmer le mot de passe</label>
+                     <input type="password" name="password2" class="form-control" required>
+        {{ form.password2.errors }}
+                </div>
+                {{ form.non_field_errors }}
+
+                  <button type="submit" class="btn btn-purple w-100">
+                    Créer un compte
+                    
+                </button>
+            </form>
+
+            <p class="text-center mt-3">
+                Already have an account?
+                <a href="{% url 'accounts:login' %}" style="color:#700143  ;">se connecter</a>
+            </p>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

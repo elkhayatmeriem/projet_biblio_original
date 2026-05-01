@@ -1,0 +1,58 @@
+{% extends "base/base.html" %}
+
+{% block title %}Détail livre{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- Image -->
+        <div class="col-md-4">
+            {% if book.image %}
+                {% if book.image.url %}
+                    <img src="{{ book.image.url |default:'/static/images/nocover.png'}}" class="img-fluid rounded">
+                {% else %}
+                    <img src="{{ book.image |default:'/static/images/nocover.png'}}" class="img-fluid rounded">
+                {% endif %}
+            {% else %}
+                <p>No image</p>
+            {% endif %}
+        </div>
+
+        <!-- Infos -->
+        <div class="col-md-8">
+            <h2>{{ book.title }}</h2>
+
+            <p><strong>Auteur:</strong> {{ book.author }}</p>
+
+            {% if book.isbn %}
+                <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+            {% endif %}
+
+            {% if book.category %}
+                <p><strong>Catégorie:</strong> {{ book.category }}</p>
+            {% endif %}
+
+            {% if book.description %}
+                <p><strong>Description:</strong> {{ book.description }}</p>
+            {% endif %}
+
+            {% if book.available is not None %}
+            <p>
+                <strong>Disponibilité:</strong>
+                {% if book.available %}
+                    <span class="text-success">Disponible</span>
+                {% else %}
+                    <span class="text-danger">Indisponible</span>
+                {% endif %}
+            </p>
+            {% endif %}
+
+            <a href="/products/" class="btn btn-secondary mt-3">
+                Retour
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
