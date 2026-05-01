@@ -1,6 +1,7 @@
 import re
 from django import forms
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 class RegisterForm(forms.Form):
     first_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
@@ -44,3 +45,14 @@ class RegisterForm(forms.Form):
             raise ValidationError("Les mots de passe ne correspondent pas.")
 
         return cleaned_data
+    
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+
+        widgets = {
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+        }

@@ -4,6 +4,12 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from .forms import EditProfileForm
+from django.contrib.auth.forms import UserChangeForm
 
 
 def register_view(request):
@@ -94,3 +100,56 @@ def my_information(request):
     })
 
 
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        new_password2 = request.POST.get("new_password2")
+
+        user = request.user
+
+        # 1. CHECK OLD PASSWORD (IMPORTANT)
+        if not user.check_password(old_password):
+            messages.error(request, "Ancien mot de passe incorrect")
+            return redirect("accounts:change_password")
+
+        # 2. CHECK MATCH NEW PASSWORDS
+        if new_password != new_password2:
+            messages.error(request, "Les mots de passe ne correspondent pas")
+            return redirect("accounts:change_password")
+
+        # 3. SAVE NEW PASSWORD
+        user.set_password(new_password)
+        user.save()
+
+        # 4. IMPORTANT: logout after password change
+        logout(request)
+
+        messages.success(request, "Mot de passe modifié avec succès")
+        return redirect("accounts:login")
+
+    return render(request, "accounts/change_password.html")
+
+@login_required
+def edit_information(request):
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            #  IMPORTANT : sync username avec email
+            user.username = user.email
+
+            user.save()
+
+            messages.success(request, "Informations mises à jour avec succès")
+            return redirect("accounts:my_information")
+    else:
+        form = EditProfileForm(instance=request.user)
+
+    return render(request, "accounts/edit_information.html", {
+        "form": form
+    })

@@ -172,7 +172,6 @@ body {
 </li>
 <!-- REMPLACE CETTE PARTIE -->
 <li class="nav-item dropdown">
-
 {% if user.is_authenticated %}
 
     <a class="nav-link dropdown-toggle d-flex align-items-center"
@@ -183,7 +182,7 @@ body {
        style="font-weight: 400; font-size:large;">
 
         <i class="bi bi-person-circle me-2"></i>
-        {{ user.username }}
+        {{ user.email }}
 
     </a>
 
@@ -371,7 +370,7 @@ body {
 
     </div>
 </div>
-<!-- CATEGORY SIDEBAR (LEFT) -->
+
 <!-- CATEGORY SIDEBAR (LEFT) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="categorySidebar">
 
@@ -442,7 +441,7 @@ body {
 
 <footer class="mt-5">
 
-    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register my_information" and not request.GET.category %}
+    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register my_information change_password edit_information" and not request.GET.category %}
     <!-- TOP SECTION -->
     <div style="background:#ffe8f2; color:#700143;" class="py-5">
         <div class="container text-center">

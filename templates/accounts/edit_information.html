@@ -1,0 +1,100 @@
+{% extends "base/base.html" %}
+
+{% block title %}Éditer mes informations{% endblock %}
+
+{% block content %}
+<style>
+.btn-custom-purple {
+    background: #700143;
+    border: 1px solid #700143;
+    color: white;
+    transition: 0.3s;
+}
+
+.btn-custom-purple:hover {
+    background: #fcd7dd;
+    border: 1px solid #fcd7dd;
+    color: #700143;
+    font-weight: 500;
+}
+</style>
+<div class="container mt-5">
+
+    <div class="row">
+
+        <!-- SIDEBAR (copié pour cohérence visuelle) -->
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm">
+
+                <ul class="list-unstyled">
+                    <li>Mon compte</li>
+                    <hr>
+
+                    <li class="mb-2">
+                        <a href="#" class="text-dark text-decoration-none">
+                            Mes emprunts
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="#" class="text-dark text-decoration-none">
+                            Mes pénalités
+                        </a>
+                    </li>
+
+                    <hr>
+
+                    <li>
+                        <a href="{% url 'accounts:logout' %}" class="text-dark text-decoration-none">
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <!-- FORM -->
+        <div class="col-md-9">
+
+            <h3 class="mb-4">Modifier mes informations</h3>
+
+            <div class="card shadow-sm p-4">
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        {{ form.last_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Prénom</label>
+                        {{ form.first_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ form.email }}
+                    </div>
+                      <div class="d-flex justify-content-between mt-3">
+                    <a href="{% url 'accounts:my_information' %}" style="color:#700143;">
+                            Retour
+                        </a>
+
+                        <button type="submit" class="btn btn-custom-purple">
+                            Enregistrer
+                        </button>
+                        </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
