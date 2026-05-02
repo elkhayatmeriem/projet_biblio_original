@@ -1,34 +1,47 @@
-/* SIDEBAR BACKGROUND */
+/* =========================
+   SIDEBAR BACKGROUND
+========================= */
 .main-sidebar,
 .main-sidebar::before,
 .sidebar,
 .sidebar-dark-primary {
-    background-color: #700143!important;
+    background-color: #700143 !important;
 }
 
-/* SIDEBAR TEXT */
+/* =========================
+   SIDEBAR TEXT
+========================= */
 .main-sidebar .nav-sidebar .nav-link {
-    color: #000000 !important;
+    color: #ffffff !important;
 }
 
-/* BRAND TEXT */
+/* =========================
+   BRAND
+========================= */
 .brand-link {
     background-color: #700143 !important;
-    color: #000000 !important;
+    color: #ffffff !important;
 }
 
-/* HOVER EFFECT */
+/* =========================
+   HOVER EFFECT
+========================= */
 .main-sidebar .nav-sidebar .nav-link:hover {
     background-color: #f1f1f1 !important;
     color: #000000 !important;
 }
 
-/* ACTIVE ITEM */
+/* =========================
+   ACTIVE ITEM
+========================= */
 .main-sidebar .nav-sidebar .nav-link.active {
     background-color: #eaeaea !important;
     color: #000000 !important;
 }
 
+/* =========================
+   BUTTONS (ADMIN ONLY)
+========================= */
 .btn.btn-primary,
 .btn-success,
 a.addlink {
@@ -36,11 +49,13 @@ a.addlink {
     border-color: #700143 !important;
     color: #ffffff !important;
 }
+
 .btn-info {
     background-color: #fcd7dd !important;
     border-color: #fcd7dd !important;
     color: #000000 !important;
 }
+
 input[type="submit"],
 button.default,
 .btn.btn-success {
@@ -48,32 +63,29 @@ button.default,
     border-color: #700143 !important;
     color: white !important;
 }
+
 .btn-danger {
     background-color: #111 !important;
     border-color: #111 !important;
     color: #ffffff !important;
 }
-/* GENERAL TEXT LINKS (turn blue → black) */
-a {
-    color: #fff !important;
-}
 
-/* NAVIGATION LINKS */
-.main-sidebar .nav-sidebar .nav-link {
-    color: #070000 !important;
-}
+/* =========================
+   LINKS (SAFE - ADMIN ONLY)
+========================= */
 
-/* TABLE LINKS (like model names, items) */
+/* table links only */
 table a {
     color: #000000 !important;
 }
 
-/* HEADER LINKS (breadcrumbs, titles) */
+/* breadcrumbs */
 .breadcrumb a {
     color: #000000 !important;
 }
 
-/* HOVER (optional nice effect) */
-a:hover {
-    color: #700143 !important;
-}
+/* =========================
+   REMOVE GLOBAL LINK BUG
+   (IMPORTANT FIX)
+========================= */
+/* DO NOT style ALL <a> tags globally */
