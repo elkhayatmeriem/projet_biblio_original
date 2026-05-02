@@ -66,6 +66,13 @@ def login_view(request):
         )
 
         if auth_user is not None:
+
+            # BLOCK ADMIN/STAFF FROM USER LOGIN
+            if auth_user.is_staff or auth_user.is_superuser:
+                return render(request, "accounts/login.html", {
+                    "message": "Admins must log in via admin panel."
+                })
+
             login(request, auth_user)
             return redirect("home")
 
@@ -74,7 +81,6 @@ def login_view(request):
         })
 
     return render(request, "accounts/login.html")
-
 
 def logout_view(request):
     logout(request)
@@ -95,6 +101,9 @@ def penalites(request):
 
 @login_required
 def my_information(request):
+    if request.user.is_staff:
+        return redirect('/admin/')
+
     return render(request, "accounts/my_information.html", {
         "user": request.user
     })
