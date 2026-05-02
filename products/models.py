@@ -47,3 +47,4 @@ class Borrow(models.Model):
     def __str__(self):
         return f"{self.student} -> {self.book.title}"
     
+

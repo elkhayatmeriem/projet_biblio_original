@@ -62,6 +62,17 @@ JAZZMIN_SETTINGS = {
     "copyright": "BookNest",
 
     "custom_css": "css/custom.css",
+
+    # 👇 ADD THIS (VERY IMPORTANT)
+    "hide_apps": [],
+    "hide_models": [],
+
+    # 👇 FORCE ORDER + VISIBILITY
+    "order_with_respect_to": [
+        "products",
+        "contact",
+        "users",
+    ],
 }
 
 MIDDLEWARE = [

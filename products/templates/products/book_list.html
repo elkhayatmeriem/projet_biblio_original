@@ -5,7 +5,38 @@
 {% block content %}
 <div class="container mt-4">
 
-    <h1 class="mb-4">Catalogue des livres</h1>
+    <!-- ✅ BREADCRUMB -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}"
+                   style="text-decoration:none; color:#5f082a; font-weight:500;">
+                    Accueil
+                </a>
+            </li>
+
+            {% if selected_category %}
+                <li class="breadcrumb-item active">
+                    {{ selected_category|title|cut:"-" }}
+                </li>
+            {% else %}
+                <li class="breadcrumb-item active">
+                    Catalogue des livres
+                </li>
+            {% endif %}
+
+        </ol>
+    </nav>
+
+    <!-- ✅ TITLE -->
+    <h1 class="mb-4">
+        {% if selected_category %}
+            {{ selected_category|title|cut:"-" }}
+        {% else %}
+            Catalogue des livres
+        {% endif %}
+    </h1>
 
     <div class="row">
 
@@ -30,23 +61,27 @@
 
                 <p><strong>Catégorie:</strong> {{ book.category }}</p>
 
-                {% if book.available %}
-                    <span class="badge bg-success mb-3">Disponible</span>
-                {% else %}
-                    <span class="badge bg-secondary mb-3">Externe</span>
-                {% endif %}
-
-                {# ---------------- FIXED DETAIL LINKS ---------------- #}
+         {% if book.available %}
+    <span class="badge mb-3"
+          style="background:#28a745; color:white; border:1px solid #28a745;">
+        Disponible
+    </span>
+{% else %}
+    <span class="badge mb-3"
+          style="background:#dc3545; color:white; border:1px solid #dc3545;">
+        Indisponible
+    </span>
+{% endif %}
 
                 {% if book.id %}
                     <a href="{% url 'book_detail' book.id %}?page={{ page_obj.number }}&category={{ selected_category }}"
-                       class="btn btn-dark w-100">
+                       class="btn btn-purple w-100">
                         Voir détails
                     </a>
 
                 {% elif book.isbn %}
                     <a href="{% url 'external_book_detail' book.isbn %}?page={{ page_obj.number }}&category={{ selected_category }}"
-                       class="btn btn-info w-100">
+                       class="btn btn-purple w-100">
                         Voir détails
                     </a>
                 {% endif %}

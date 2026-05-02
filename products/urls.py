@@ -6,4 +6,6 @@ urlpatterns = [
     path('<int:pk>/', BookDetail.as_view(), name='book_detail'),
     path('external/<str:isbn>/', ExternalBookDetail.as_view(), name='external_book_detail'),
     path('search/', search_books, name='search_books'),
+    
+    
 ]
