@@ -1,19 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from contact.models import Contact   
+from .models import Contact
 
-def home(request):
-    return render(request, 'base/home.html')
-
-def contact(request):
-    return render(request, 'contact.html')
-
-
-def home(request):
-    
-    return render(request, 'base/home.html')
-
-def contact(request):
+def contact_view(request):
     if request.method == "POST":
         nom = request.POST.get("nom")
         email = request.POST.get("email")
@@ -27,5 +16,7 @@ def contact(request):
             )
             messages.success(request, "Message envoyé avec succès !")
             return redirect('contact')
+        else:
+            messages.error(request, "Tous les champs sont obligatoires.")
 
     return render(request, 'contact/contact.html')

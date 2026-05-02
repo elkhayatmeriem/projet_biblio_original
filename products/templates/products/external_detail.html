@@ -1,23 +1,35 @@
 {% extends "base/base.html" %}
 
-{% block title %}Détail livre{% endblock %}
-
 {% block content %}
 <div class="container mt-4">
 
-    <h2>{{ book.title }}</h2>
+    <div class="row">
 
-    <p><strong>Auteur:</strong> {{ book.author }}</p>
+        <div class="col-md-4">
+            {% if book.image %}
+                <img src="{{ book.image }}" class="img-fluid rounded">
+            {% else %}
+                <img src="/static/images/no_cover.png" class="img-fluid rounded">
+            {% endif %}
+        </div>
 
-    <p><strong>Description:</strong> {{ book.description }}</p>
+        <div class="col-md-8">
 
-    {% if book.image %}
-        <img src="{{ book.image }}" class="img-fluid rounded">
-    {% endif %}
+            <h2>{{ book.title }}</h2>
+            <p><strong>Auteur:</strong> {{ book.author }}</p>
 
-    <a href="{% url 'books' %}" class="btn btn-secondary mt-3">
-        Retour
-    </a>
+            {% if book.description %}
+                <p>{{ book.description }}</p>
+            {% endif %}
+
+            <!-- RETOUR -->
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                Retour
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 {% endblock %}

@@ -22,9 +22,9 @@
                          class="card-img-top"
                          style="height:300px; object-fit:cover;">
                 {% else %}
-                    <img src=""
-                         class="card-img-top"
-                         style="height:300px; object-fit:cover;">
+                  <img src="/static/images/no_cover.png"
+                         class="img-fluid rounded mb-3"
+                         style="height: 220px; object-fit: cover;">
                 {% endif %}
 
                 <!-- CONTENT -->
@@ -38,29 +38,21 @@
                             {{ book.category }}
                         </p>
                     {% endif %}
+{% if book.is_local %}
+    <a href="{% url 'book_detail' book.id %}" class="btn btn-dark w-100">
+        Voir détails
+    </a>
 
-                    {% if book.available %}
-                        <span class="badge bg-success mb-2">Disponible</span>
-                    {% endif %}
+{% elif book.isbn %}
+    <a href="{% url 'external_book_detail' book.isbn %}" class="btn btn-info w-100">
+        Voir détails
+    </a>
 
-                    <!-- ACTION BUTTONS -->
-                    {% if book.is_local and book.id %}
-                        <a href="{% url 'book_detail' book.id %}"
-                           class="btn btn-dark mt-auto">
-                            Voir détails
-                        </a>
-
-                    {% elif book.isbn %}
-                        <a href="{% url 'external_book_detail' book.isbn %}"
-                           class="btn btn-info mt-auto">
-                            Voir détails
-                        </a>
-
-                    {% else %}
-                        <button class="btn btn-secondary mt-auto" disabled>
-                            No details
-                        </button>
-                    {% endif %}
+{% else %}
+    <button class="btn btn-danger w-100" disabled>
+         indisponibles
+    </button>
+{% endif %}
 
                 </div>
 

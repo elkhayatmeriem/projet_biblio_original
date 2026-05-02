@@ -15,12 +15,21 @@ class Book(models.Model):
 
     title = models.CharField(max_length=200)
     author = models.TextField()
-    isbn = models.CharField(max_length=50)
 
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    isbn = models.CharField(
+    max_length=50,
+    null=True,
+    blank=True,
+    unique=True
+    )
+
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+
+    image_url = models.URLField(null=True, blank=True)  # 🔥 ADD THIS
+
+    image = models.ImageField(null=True, blank=True)    # local only
 
     available = models.BooleanField(default=True)
     createdAt = models.DateTimeField(auto_now_add=True)

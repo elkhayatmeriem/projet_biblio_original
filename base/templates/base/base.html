@@ -441,7 +441,7 @@ body {
 
 <footer class="mt-5">
 
-    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register my_information change_password edit_information" and not request.GET.category %}
+    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register my_information change_password edit_information book_detail" and not request.GET.category %}
     <!-- TOP SECTION -->
     <div style="background:#ffe8f2; color:#700143;" class="py-5">
         <div class="container text-center">

@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-4q)1p*wll3*nn_lnobas9-w&st8)x!16#h56a&wes-^1v@-9cf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "admin.localhost",
+    "user.localhost",
+]
 
 
 # Application definition
@@ -43,6 +48,7 @@ INSTALLED_APPS = [
     'cart',
     'base',
     'accounts',
+    'contact',
 
 
 
@@ -56,7 +62,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+   
 ]
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -136,3 +145,4 @@ STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default_auto_field
 DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
+
