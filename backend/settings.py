@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,15 @@ INSTALLED_APPS = [
 
 
 ]
+JAZZMIN_SETTINGS = {
+    "site_title": "My Admin",
+    "site_header": "My Dashboard",
+    "site_brand": "BookNest",
+    "welcome_sign": "Welcome Admin",
+    "copyright": "BookNest",
+
+    "custom_css": "css/custom.css",
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -146,3 +156,16 @@ STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default_auto_field
 DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
 
+# Static files
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+# Media files (user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
