@@ -1,0 +1,509 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon site{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.8/dist/litera/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .navbar {
+            background-color: white !important;
+            border-bottom: none;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #222 !important;
+        }
+
+        .nav-link:hover {
+            color: #700143 !important;
+        }
+
+        .search-bar {
+            width: 400px;
+        }
+
+        .search-bar input {
+            border-radius: 25px;
+        }
+
+        .btn-purple {
+            background-color: #700143;
+            border-color: #700143;
+            color: white;
+            border-radius: 25px;
+        }
+
+        .btn-purple:hover {
+            background-color: #fcd7dd;
+            border-color: #fcd7dd;
+            color:#700143;
+            font-weight: 600; 
+           
+        }
+
+        .carousel-item img {
+            height: 400px;
+            object-fit: cover;
+        }
+        html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* MAIN CONTENT */
+.container.mt-4 {
+    flex: 1;
+}
+  .btn-dis {
+    background-color: #fcd7dd;
+    border: 1px solid #fcd7dd;
+    background:#fcd0db; 
+    color:#700143;
+    font-weight: 500; 
+    font-size: large;
+}
+
+.btn-dis:hover {
+    background-color: #700143;
+    border: 1px solid #700143;
+    color: white;
+}
+/* SOCIAL ICONS */
+/* SOCIAL ICONS */
+.social-icon {
+    color: #fff !important;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* ICON HOVER */
+.social-icon:hover {
+    color: #700143 !important;
+    transform: scale(1.2);
+}
+/* Remove Bootstrap accordion box look */
+/* Remove full accordion box styling */
+.accordion-item {
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Remove the button (category header) box style */
+.accordion-button {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding-left: 0;
+    color: #222;
+}
+
+/* Remove focus outline */
+.accordion-button:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Add ONLY bottom line for each main category */
+.accordion-item {
+    border-bottom: 1px solid #ddd !important;
+}
+
+/* Optional: cleaner hover */
+.accordion-button:hover {
+    color: #700143;
+}
+    </style>
+</head>
+
+<body>
+
+
+<!-- NAVBAR (UNCHANGED) -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold"
+   href="{% url 'home' %}">
+    <img src="{% static 'images/logo1.png' %}" height="120">
+</a>
+ <!-- BOUTON CATEGORIES (À CÔTÉ DU LOGO) -->
+ <button class="btn btn-outline-dark ms-2"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#categorySidebar">
+            Catégories
+        </button>
+
+
+       <form class="d-flex mx-auto search-bar" method="GET" action="{% url 'search_books' %}">
+    <input class="form-control me-2"
+           type="search"
+           name="q"
+           placeholder="Rechercher un livre..."
+           value="{{ request.GET.q }}">
+
+    <button type="submit" class="btn btn-purple">
+        Search
+    </button>
+</form>
+
+        <ul class="navbar-nav ms-auto align-items-center">
+
+            <li class="nav-item">
+    <a class="nav-link"
+       href="#"
+       data-bs-toggle="offcanvas"
+       data-bs-target="#cartSidebar"style="font-weight: 400; font-size:large ;">
+        Mon panier
+    </a>
+</li>
+<!-- REMPLACE CETTE PARTIE -->
+<li class="nav-item dropdown">
+{% if user.is_authenticated %}
+
+    <a class="nav-link dropdown-toggle d-flex align-items-center"
+       href="#"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false"
+       style="font-weight: 400; font-size:large;">
+
+        <i class="bi bi-person-circle me-2"></i>
+        {{ user.email }}
+
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end p-2" style="min-width: 220px;">
+
+        <!-- MES INFOS -->
+        <li>
+            <a class="dropdown-item" href="{% url 'accounts:my_information' %}">
+                 Mes informations
+            </a>
+        </li>
+
+        <!-- MES EMPRUNTS -->
+        <li>
+            <a class="dropdown-item" href="">
+                 Mes emprunts
+            </a>
+        </li>
+
+        <!-- MES PENALITES -->
+        <li>
+            <a class="dropdown-item" href="">
+                 Mes pénalités
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <!-- DECONNEXION -->
+                <form method="POST" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <button class="dropdown-item" type="submit">
+        Se déconnecter
+    </button>
+    </form>
+  </li>
+          
+
+    </ul>
+
+{% else %}
+
+    <!-- NON CONNECTÉ -->
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false"
+       style="font-weight: 400; font-size:large;">
+
+        Mon compte
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+
+        <li>
+            <a class="dropdown-item" href="{% url 'accounts:login' %}">
+                Se connecter
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item" href="{% url 'accounts:register' %}">
+                Créer un compte
+            </a>
+        </li>
+
+    </ul>
+
+{% endif %}
+
+</li>
+        </ul>
+        
+
+    </div>
+</nav>
+
+<!-- CAROUSEL -->
+{% if request.path == "/" %}
+
+<div class="container mt-3">
+
+    <div class="mx-auto rounded overflow-hidden shadow" style="max-width: 900px;">
+
+        <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
+
+            <!-- indicators -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2"></button>
+            </div>
+
+            <!-- slides -->
+            <div class="carousel-inner">
+
+                <!-- SLIDE 1 -->
+                <div class="carousel-item active">
+                    <img src="{% static 'images/banner22.png' %}"
+                         class="d-block w-100"
+                         style="height: 400px; object-fit: contain; background: #000;">
+
+                    <div class="position-absolute bottom-0 start-50 mb-2"
+                         style="transform: translateX(-200px);">
+
+                        <a href="products/"
+                           class="btn btn-dis">
+                            Discover
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- SLIDE 2 -->
+                <div class="carousel-item">
+                    <img src="{% static 'images/banner1.avif' %}"
+                         class="d-block w-100"
+                         style="height: 400px; object-fit: cover;">
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="carousel-item">
+                    <img src="{% static 'images/banner33.jpeg' %}"
+                         class="d-block w-100"
+                         style="height: 400px; object-fit: contain;background: #372b24;">
+                </div>
+
+            </div>
+
+            <!-- controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- CART OFFCANVAS (FIXED SIDEBAR) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartSidebar">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title"> Mon panier</h5>
+
+        <!-- CLOSE BUTTON -->
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        {% if cart_items %}
+
+            {% for item in cart_items %}
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <strong>{{ item.title }}</strong><br>
+                        <small>Qty: {{ item.quantity }}</small>
+                    </div>
+
+                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">
+                        ✕
+                    </a>
+                </div>
+                <hr>
+            {% endfor %}
+
+            <p class="fw-bold">Total items: {{ total_items }}</p>
+
+        {% else %}
+
+            <div class="alert" style="background:#fcd0db;  color:#4c358b; border:none;">
+                Ton panier est vide
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<!-- CATEGORY SIDEBAR (LEFT) -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="categorySidebar">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Catégories</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        <div class="d-flex flex-column gap-2">
+
+            <a href="{% url 'books' %}?category=fiction"
+               class="text-dark text-decoration-none">
+                Fiction
+            </a>
+
+            <a href="{% url 'books' %}?category=science-fiction"
+               class="text-dark text-decoration-none">
+                Science Fiction
+            </a>
+
+            <a href="{% url 'books' %}?category=fantasy"
+               class="text-dark text-decoration-none">
+                Fantasy
+            </a>
+
+            <a href="{% url 'books' %}?category=manga"
+               class="text-dark text-decoration-none">
+                Manga
+            </a>
+
+            <a href="{% url 'books' %}?category=business"
+               class="text-dark text-decoration-none">
+                Business
+            </a>
+
+            <a href="{% url 'books' %}?category=history"
+               class="text-dark text-decoration-none">
+                History
+            </a>
+
+            <a href="{% url 'books' %}?category=romance"
+               class="text-dark text-decoration-none">
+                Romance
+            </a>
+
+            <a href="{% url 'books' %}?category=thriller"
+               class="text-dark text-decoration-none">
+                Thriller
+            </a>
+
+            <a href="{% url 'books' %}?category=poetry"
+               class="text-dark text-decoration-none">
+                Poetry
+            </a>
+
+        </div>
+
+    </div>
+</div>
+<!-- CONTENT -->
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<footer class="mt-5">
+
+    {% if request.resolver_match and request.resolver_match.url_name not in "contact search_books login register my_information change_password edit_information book_detail" and not request.GET.category %}
+    <!-- TOP SECTION -->
+    <div style="background:#ffe8f2; color:#700143;" class="py-5">
+        <div class="container text-center">
+
+            <h4 class="fw-bold mb-3">
+                Vous avez d'autres questions ?
+            </h4>
+
+            <p class="mb-3">
+                Consultez notre page de contact pour toute demande d'information.
+            </p>
+
+            <a href="{% url 'contact' %}" class="btn btn-purple px-4 py-2">
+                Contactez-nous
+            </a>
+
+        </div>
+    </div>
+
+    {% endif %}
+
+    <!-- BOTTOM SECTION -->
+    <div style="background:#111; color:white;" class="py-4">
+        <div class="container-fluid px-5">
+
+            <div class="row text-center text-md-start">
+
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold">Horaires</h6>
+                    <p class="mb-1">Lundi - Vendredi : 9h / 18h</p>
+                    <p class="mb-1">Samedi : 10h / 16h</p>
+                    <p class="mb-0">Dimanche : Fermé</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold">Mon site de livres</h6>
+                    <p class="mb-3">
+                        Découvrez vos livres préférés facilement.
+                    </p>
+
+                    <div class="d-flex gap-3">
+                        <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr style="border-color: rgba(255,255,255,0.2);">
+
+            <div class="text-center">
+                <small>© 2026 Tous droits réservés</small>
+            </div>
+
+        </div>
+    </div>
+
+</footer>
+
+<!-- BOOTSTRAP ICONS -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</body>
+</html>

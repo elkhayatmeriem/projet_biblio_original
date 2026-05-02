@@ -1,0 +1,134 @@
+{% extends "base/base.html" %}
+
+{% block title %}Contactez-nous{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'home' %}"
+               style="text-decoration:none; color:#5f082a; font-weight:500;">
+                Accueil
+            </a>
+        </li>
+
+        <li class="breadcrumb-item active" aria-current="page">
+            Contactez-nous
+        </li>
+    </ol>
+</nav>
+
+<!-- TITLE -->
+<h1 class="mb-4" style="color:#5f082a;">Contactez-nous</h1>
+
+<p class="mb-5">
+    Notre équipe est disponible pour répondre à toutes vos questions concernant
+    l’emprunt de livres, la disponibilité des ouvrages ou votre compte utilisateur.
+</p>
+
+<!-- CONTACT SECTIONS -->
+<div class="mb-5">
+
+    <h4 style="color:#5f082a;">J’ai effectué une demande d’emprunt</h4>
+    <p>
+        Écrivez-nous à :
+        <strong>emprunts@BookNest.ma</strong><br>
+        Ou téléphonez au :
+        <strong>05 22 00 11 22</strong><br>
+        (Lundi - Vendredi : 09h00 à 18h00)
+    </p>
+
+    <h4 style="color:#5f082a;">Je recherche un livre indisponible</h4>
+    <p>
+        Écrivez-nous à :
+        <strong>catalogue@BookNest.ma</strong><br>
+        Ou téléphonez au :
+        <strong>05 22 33 44 55</strong><br>
+        (Toute la semaine : 09h30 à 19h30)
+    </p>
+
+    <h4 style="color:#5f082a;">Je souhaite prolonger ou gérer mon emprunt</h4>
+    <p>
+        Écrivez-nous à :
+        <strong>support@BookNest.ma</strong><br>
+        Ou téléphonez au :
+        <strong>06 60 11 22 33</strong><br>
+        (Lundi - Samedi : 09h00 à 19h00)
+    </p>
+
+    <h4 style="color:#5f082a;">Pour toute autre question</h4>
+    <p>
+        Écrivez-nous à :
+        <strong>contact@BookNest.ma</strong><br>
+        Ou téléphonez au :
+        <strong>05 22 77 88 99</strong><br>
+        (Tous les jours : 09h00 à 20h00)
+    </p>
+
+</div>
+
+<!-- COMPANY INFO -->
+<div class="mb-5">
+    <h3 style="color:#5f082a;">Nos coordonnées</h3>
+
+    <p>
+        <strong>BookNest Bibliothèque</strong><br>
+        Siège Social : 125 Boulevard Hassan II, Casablanca 20000, Maroc<br><br>
+
+        Accueil principal : 45 Rue des Livres, Quartier Centre Ville,
+        Casablanca 20000, Maroc<br><br>
+
+        Téléphone : 05 22 77 88 99<br>
+        Fax : 05 22 77 88 00<br><br>
+
+        Horaires :<br>
+        Lundi - Samedi : 9h00 à 20h00<br>
+        Dimanche : 10h00 à 18h00
+    </p>
+</div>
+
+<!-- CONTACT FORM -->
+<h3 class="mb-3" style="color:#5f082a;">Envoyez-nous un message</h3>
+
+<form method="POST" class="w-75">
+    {% csrf_token %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="mb-3">
+        <input type="text"
+               name="nom"
+               class="form-control"
+               placeholder="Votre nom">
+    </div>
+
+    <div class="mb-3">
+        <input type="email"
+               name="email"
+               class="form-control"
+               placeholder="Votre email">
+    </div>
+
+    <div class="mb-3">
+        <textarea name="message"
+                  class="form-control"
+                  rows="5"
+                  placeholder="Votre message"></textarea>
+    </div>
+
+    <button type="submit"
+            class="btn"
+            style="background-color:#5f082a; color:white; border:1px solid #5f082a;">
+        Envoyer
+    </button>
+</form>
+
+{% endblock %}

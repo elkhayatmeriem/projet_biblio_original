@@ -1,0 +1,80 @@
+{% extends "base/base.html" %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4"> Mon panier</h2>
+
+    {% if cart_items %}
+
+        <table class="table table-bordered align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Quantité</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in cart_items %}
+
+                <tr>
+
+                    <!-- IMAGE -->
+                    <td style="width: 100px;">
+                        {% if item.image %}
+                            <img src="{{ item.image }}" class="img-fluid rounded" style="max-height: 80px;">
+                        {% else %}
+                            <span>No image</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- TITLE -->
+                    <td>{{ item.title }}</td>
+
+                    <!-- AUTHOR -->
+                    <td>{{ item.author }}</td>
+
+                    <!-- QUANTITY -->
+                    <td>{{ item.quantity }}</td>
+
+                    <!-- REMOVE BUTTON -->
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.id %}"
+                           class="btn btn-sm btn-danger">
+                            Remove
+                        </a>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <!-- TOTAL -->
+        <div class="text-end">
+            <h4>Total items: {{ total_items }}</h4>
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info"
+     style="background-color:#e6dcff; color:#3b1b7a; border-color:#c9b6ff;">
+    Ton panier est vide 
+</div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

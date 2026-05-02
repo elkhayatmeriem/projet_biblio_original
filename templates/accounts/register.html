@@ -1,0 +1,223 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Créer un nouveau compte {% endblock %}
+
+{% block content %}
+
+<style>
+  .btn-purple {
+    background-color: rgb(70, 14, 14);
+    border: 1px solid rgb(70, 14, 14);
+    color: white;
+    font-weight: 500;
+    font-size: large;
+  }
+
+  .btn-purple:hover {
+    background-color: #fcd0db;
+    border: 1px solid #fcd0db;
+    color: rgb(70, 14, 14);
+  }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+
+        <div class="card shadow p-4">
+
+            <h2 class="text-center mb-4" style="color: rgb(70, 14, 14);">
+                Créer un nouveau compte
+            </h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label>Prenom</label>
+                   <input type="text" name="first_name" class="form-control"
+       value="{{ form.first_name.value|default:'' }}" required>
+                   {{ form.first_name.errors }}
+                </div>
+
+                <div class="mb-3">
+                    <label>nom</label>
+                    <input type="text" name="last_name" class="form-control"
+       value="{{ form.last_name.value|default:'' }}" required>
+       {{ form.last_name.errors }}
+                   
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control"
+                           value="{{ form.email.value|default:'' }}" required>
+                    {{ form.email.errors }}
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="mb-3">
+                    <label>Mot de passe</label>
+
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" class="form-control" required>
+
+                        <span onclick="togglePassword()" 
+                              style="position:absolute; right:10px; top:10px; cursor:pointer; color:rgb(70,14,14);">
+                            <i class="bi bi-eye"></i>
+                        </span>
+                    </div>
+
+                    <small id="strengthText" style="font-weight:500;"></small>
+                    <small id="passwordHelp" class="text-danger d-block"></small>
+                </div>
+
+                <!-- CONFIRM PASSWORD -->
+                <div class="mb-3">
+                    <label>Confirmer le mot de passe</label>
+
+                    <div style="position: relative;">
+                        <input type="password" id="password2" name="password2" class="form-control" required>
+
+                        <span onclick="togglePassword2()" 
+                              style="position:absolute; right:10px; top:10px; cursor:pointer; color:rgb(70,14,14);">
+                            <i class="bi bi-eye"></i>
+                        </span>
+                    </div>
+
+                    <small id="confirmHelp" class="text-danger"></small>
+                </div>
+
+                <button type="submit" class="btn btn-purple w-100">
+                    Créer un compte
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+const passwordInput = document.getElementById("password");
+const password2Input = document.getElementById("password2");
+
+const help = document.getElementById("passwordHelp");
+const confirmHelp = document.getElementById("confirmHelp");
+const strengthText = document.getElementById("strengthText");
+
+let passwordWasValid = false;
+let lastStrength = "";
+let timeoutId;
+
+//  toggle PASSWORD 1
+function togglePassword() {
+    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+}
+
+//  toggle PASSWORD 2
+function togglePassword2() {
+    password2Input.type = password2Input.type === "password" ? "text" : "password";
+}
+
+// TEMP MESSAGE
+function showTemp(element, message, success=true) {
+    clearTimeout(timeoutId);
+
+    element.innerHTML = message;
+    element.classList.remove("text-danger", "text-success");
+    element.classList.add(success ? "text-success" : "text-danger");
+
+    timeoutId = setTimeout(() => {
+        element.innerHTML = "";
+    }, 2000);
+}
+
+// PASSWORD CHECK
+passwordInput.addEventListener("input", function () {
+    const password = passwordInput.value;
+    let score = 0;
+    let errors = [];
+
+    if (password.length >= 8) score++; else errors.push("8 caractères");
+    if (/[A-Z]/.test(password)) score++; else errors.push("majuscule");
+    if (/[a-z]/.test(password)) score++; else errors.push("minuscule");
+    if (/[0-9]/.test(password)) score++; else errors.push("chiffre");
+    if (/[!@#$%^&*(),.?\":{}|<>_]/.test(password)) score++; else errors.push("spécial");
+
+    let strength = "";
+
+    if (password.length === 0) {
+        strengthText.innerHTML = "";
+    } 
+    else if (score <= 2) {
+        strength = "Faible";
+        strengthText.style.color = "#c0392b";
+    } 
+    else if (score <= 4) {
+        strength = "Moyenne";
+        strengthText.style.color = "#e67e22";
+    } 
+    else {
+        strength = "Forte";
+        strengthText.style.color = "#27ae60";
+    }
+
+    if (strength !== lastStrength) {
+    lastStrength = strength;
+
+    if (strength !== "") {
+        strengthText.innerHTML = "Sécurité : " + strength;
+
+        // disparaît après 2 secondes
+        setTimeout(() => {
+            strengthText.innerHTML = "";
+        }, 2000);
+    }
+}
+
+    //  affichage propre des règles
+   if (password.length < 8 || errors.length > 0) { 
+    help.innerHTML = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."; 
+    help.classList.remove("text-success"); 
+    help.classList.add("text-danger"); 
+    passwordWasValid = false; 
+} else { 
+    if (!passwordWasValid) { 
+        showTemp(help, "Mot de passe valide", true); passwordWasValid = true; } 
+    }
+
+
+    // recheck confirm
+    if (password2Input.value !== "") {
+        password2Input.dispatchEvent(new Event("input"));
+    }
+});
+
+// CONFIRM PASSWORD
+password2Input.addEventListener("input", function () {
+    if (password2Input.value === "") {
+        confirmHelp.innerHTML = "";
+        return;
+    }
+
+    if (password2Input.value !== passwordInput.value) {
+        confirmHelp.innerHTML = " Les mots de passe ne correspondent pas";
+        confirmHelp.classList.add("text-danger");
+        confirmHelp.classList.remove("text-success");
+    } 
+    else {
+        confirmHelp.innerHTML = "";
+    }
+});
+</script>
+
+{% endblock %}
