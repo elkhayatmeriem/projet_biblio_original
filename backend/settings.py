@@ -103,11 +103,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
+        'NAME': 'dbevente',
+        'USER':'root',
+        'PASSWORD':'root123',
+        'HOST':'localhost',
+        'PORT':'3307',
+=======
         'NAME': 'dbEvente',
         'USER':'root',
         'PASSWORD':'123456789qscqwerty',
         'HOST':'localhost',
         'PORT':'3306',
+>>>>>>> 2bc8d3d7acefc04bafd3de227c14926e02f86220
     }
 }
 
