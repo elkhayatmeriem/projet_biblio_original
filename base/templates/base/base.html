@@ -127,6 +127,70 @@ body {
 .accordion-button:hover {
     color: #700143;
 }
+.book-img {
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+.book-img:hover {
+    transform: scale(1.05);
+}
+.book-slider {
+    scroll-behavior: smooth;
+}
+
+.book-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.book-card {
+    min-width: 160px;
+    flex: 0 0 auto;
+}
+
+.book-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.book-card img:hover {
+    transform: scale(1.08);
+}
+
+.book-title {
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.book-author {
+    font-size: 12px;
+    color: #777;
+}
+.book-card {
+    min-width: 180px;
+    flex: 0 0 auto;
+    transition: 0.3s;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+}
+
+.book-card img {
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23700143' stroke-width='2' stroke-linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 22px;
+    height: 22px;
+}
+
     </style>
 </head>
 
@@ -142,12 +206,17 @@ body {
     <img src="{% static 'images/logo1.png' %}" height="120">
 </a>
  <!-- BOUTON CATEGORIES (À CÔTÉ DU LOGO) -->
- <button class="btn btn-outline-dark ms-2"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#categorySidebar">
-            Catégories
-        </button>
+<button class="btn ms-2 d-flex align-items-center gap-2 fw-semibold"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#categorySidebar"
+        aria-label="Catégories"
+        style="color:#700143; font-weight:600;">
 
+    <span class="navbar-toggler-icon"></span>
+    <span>Catégories</span>
+
+</button>
 
        <form class="d-flex mx-auto search-bar" method="GET" action="{% url 'search_books' %}">
     <input class="form-control me-2"
@@ -288,14 +357,13 @@ body {
                          style="height: 400px; object-fit: contain; background: #000;">
 
                     <div class="position-absolute bottom-0 start-50 mb-2"
-                         style="transform: translateX(-200px);">
+     style="transform: translateX(-200px) translateZ(0); will-change: transform; z-index: 10;">
 
-                        <a href="products/"
-                           class="btn btn-dis">
-                            Discover
-                        </a>
+    <a href="products/" class="btn btn-dis">
+        Discover
+    </a>
 
-                    </div>
+</div>
                 </div>
 
                 <!-- SLIDE 2 -->
@@ -328,6 +396,41 @@ body {
     </div>
 
 </div>
+
+{% endif %}
+
+
+{% if request.resolver_match.url_name == "home" %}
+<div class="container mt-5">
+
+    <h3 class="fw-bold mb-4" style="color:#700143;">
+        Livres les plus empruntés
+    </h3>
+
+    <!-- SLIDER -->
+   <div class="position-relative">
+
+    <!-- BOUTON GAUCHE -->
+    <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y shadow"
+            onclick="scrollBooks(-1)">
+        ‹
+    </button>
+
+    <!-- SLIDER -->
+    <div class="book-slider d-flex overflow-auto gap-3 px-5" id="bookSlider">
+        <!-- livres injectés ici -->
+    </div>
+
+    <!-- BOUTON DROIT -->
+    <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y shadow"
+            onclick="scrollBooks(1)">
+        ›
+    </button>
+
+</div>
+
+</div>
+
 
 {% endif %}
 
@@ -506,5 +609,67 @@ body {
 <!-- BOOTSTRAP ICONS -->
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    async function loadBooks() {
+        const slider = document.getElementById("bookSlider");
+        if (!slider) return;
+
+        try {
+            const res = await fetch("https://openlibrary.org/search.json?q=bestseller&limit=10");
+            const data = await res.json();
+
+            if (!data.docs || data.docs.length === 0) {
+                slider.innerHTML = "<p>Aucun livre trouvé</p>";
+                return;
+            }
+
+            data.docs.forEach(book => {
+
+                const title = book.title || "Titre inconnu";
+                const author = book.author_name ? book.author_name[0] : "Auteur inconnu";
+
+                const img = book.cover_i
+                    ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+                    : "https://via.placeholder.com/150x220?text=No+Image";
+
+                const card = `
+    <div class="book-card shadow-sm p-2 bg-white rounded">
+
+        <img src="${img}">
+
+        <div class="book-title fw-semibold">${title}</div>
+        <div class="book-author">${author}</div>
+
+        <a href="https://openlibrary.org${book.key}" target="_blank"
+   class="btn btn-sm btn-purple mt-2 w-100">
+    Voir détails
+</a>
+
+    </div>
+`;
+
+                slider.innerHTML += card;
+            });
+
+        } catch (error) {
+            console.error("Erreur API :", error);
+            slider.innerHTML = "<p>Erreur de chargement</p>";
+        }
+    }
+
+    loadBooks();
+});
+function scrollBooks(direction) {
+    const slider = document.getElementById("bookSlider");
+    const scrollAmount = 300;
+
+    slider.scrollBy({
+        left: direction * scrollAmount,
+        behavior: "smooth"
+    });
+}
+</script>
 </body>
 </html>

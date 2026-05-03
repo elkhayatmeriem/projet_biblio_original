@@ -1,133 +1,208 @@
+
 {% extends "base/base.html" %}
 
 {% block title %}Liste des livres{% endblock %}
 
 {% block content %}
+
+<style>
+.pagination .page-item.active .page-link {
+    background-color: #5f082a !important;
+    border-color: #5f082a !important;
+    color: white !important;
+}
+.pagination .page-link {
+    color: #5f082a;
+}
+</style>
+
 <div class="container mt-4">
-
-    <!-- ✅ BREADCRUMB -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-
-            <li class="breadcrumb-item">
-                <a href="{% url 'home' %}"
-                   style="text-decoration:none; color:#5f082a; font-weight:500;">
-                    Accueil
-                </a>
-            </li>
-
-            {% if selected_category %}
-                <li class="breadcrumb-item active">
-                    {{ selected_category|title|cut:"-" }}
-                </li>
-            {% else %}
-                <li class="breadcrumb-item active">
-                    Catalogue des livres
-                </li>
-            {% endif %}
-
-        </ol>
-    </nav>
-
-    <!-- ✅ TITLE -->
-    <h1 class="mb-4">
-        {% if selected_category %}
-            {{ selected_category|title|cut:"-" }}
-        {% else %}
-            Catalogue des livres
-        {% endif %}
-    </h1>
 
     <div class="row">
 
-        {% for book in books %}
+        <!-- ================= SIDEBAR ================= -->
+        <div class="col-md-3">
 
-        <div class="col-md-4 mb-4">
-            <div class="border rounded shadow-sm h-100 p-3 text-center">
+            <div class="card p-3 shadow-sm mb-3">
 
-                {% if book.image %}
-                    <img src="{{ book.image }}"
-                         class="img-fluid rounded mb-3"
-                         style="height: 220px; object-fit: cover;">
-                {% else %}
-                    <img src="/static/images/no_cover.png"
-                         class="img-fluid rounded mb-3"
-                         style="height: 220px; object-fit: cover;">
-                {% endif %}
+                <h6 class="fw-bold" style="color:#5f082a;">
+                    Catégories
+                </h6>
 
-                <h5 class="fw-bold">{{ book.title }}</h5>
+                <hr>
 
-                <p><strong>Auteur:</strong> {{ book.author }}</p>
+                <a href="{% url 'books' %}?category=all"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Tous les livres
+                </a>
 
-                <p><strong>Catégorie:</strong> {{ book.category }}</p>
+                <a href="{% url 'books' %}?category=fiction"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Fiction
+                </a>
 
-         {% if book.available %}
-    <span class="badge mb-3"
-          style="background:#28a745; color:white; border:1px solid #28a745;">
-        Disponible
-    </span>
-{% else %}
-    <span class="badge mb-3"
-          style="background:#dc3545; color:white; border:1px solid #dc3545;">
-        Indisponible
-    </span>
-{% endif %}
+                <a href="{% url 'books' %}?category=science-fiction"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Science Fiction
+                </a>
 
-                {% if book.id %}
-                    <a href="{% url 'book_detail' book.id %}?page={{ page_obj.number }}&category={{ selected_category }}"
-                       class="btn btn-purple w-100">
-                        Voir détails
-                    </a>
+                <a href="{% url 'books' %}?category=fantasy"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Fantasy
+                </a>
 
-                {% elif book.isbn %}
-                    <a href="{% url 'external_book_detail' book.isbn %}?page={{ page_obj.number }}&category={{ selected_category }}"
-                       class="btn btn-purple w-100">
-                        Voir détails
-                    </a>
-                {% endif %}
+                <a href="{% url 'books' %}?category=manga"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Manga
+                </a>
+
+                <a href="{% url 'books' %}?category=Historical-Fiction"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Historical Fiction
+                </a>
+
+                <a href="{% url 'books' %}?category=romance"
+                   class="d-block mb-2 text-decoration-none text-dark">
+                    Romance
+                </a>
 
             </div>
+
         </div>
 
-        {% empty %}
-            <p>Aucun livre disponible.</p>
-        {% endfor %}
+        <!-- ================= MAIN CONTENT ================= -->
+        <div class="col-md-9">
+
+            <!-- BREADCRUMB -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'home' %}"
+                           style="text-decoration:none; color:#5f082a; font-weight:500;">
+                            Accueil
+                        </a>
+                    </li>
+
+                    {% if selected_category %}
+                        <li class="breadcrumb-item active">
+                            {{ selected_category|title|cut:"-" }}
+                        </li>
+                    {% else %}
+                        <li class="breadcrumb-item active">
+                            Catalogue des livres
+                        </li>
+                    {% endif %}
+
+                </ol>
+            </nav>
+
+            <!-- TITLE -->
+            <h1 class="mb-4">
+                {% if selected_category %}
+                    {{ selected_category|title|cut:"-" }}
+                {% else %}
+                    Catalogue des livres
+                {% endif %}
+            </h1>
+
+            <!-- BOOK GRID -->
+            <div class="row">
+
+                {% for book in books %}
+
+                <div class="col-md-4 mb-4">
+
+                    <div class="border rounded shadow-sm h-100 p-3 text-center">
+
+                        {% if book.image %}
+                            <img src="{{ book.image }}"
+                                 class="img-fluid rounded mb-3"
+                                 style="height: 220px; object-fit: cover;">
+                        {% else %}
+                            <img src="/static/images/no_cover.png"
+                                 class="img-fluid rounded mb-3"
+                                 style="height: 220px; object-fit: cover;">
+                        {% endif %}
+
+                        <h5 class="fw-bold">{{ book.title }}</h5>
+
+                        <p><strong>Auteur:</strong> {{ book.author }}</p>
+
+                        <p><strong>Catégorie:</strong> {{ book.category }}</p>
+
+                        {% if book.available %}
+                            <span class="badge mb-3"
+                                  style="background:#28a745; color:white;">
+                                Disponible
+                            </span>
+                        {% else %}
+                            <span class="badge mb-3"
+                                  style="background:#dc3545; color:white;">
+                                Indisponible
+                            </span>
+                        {% endif %}
+
+                        {% if book.id %}
+                            <a href="{% url 'book_detail' book.id %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
+                               class="btn btn-purple w-100">
+                                Voir détails
+                            </a>
+
+                        {% elif book.isbn %}
+                            <a href="{% url 'external_book_detail' book.isbn %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
+                               class="btn btn-purple w-100">
+                                Voir détails
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+                    <p>Aucun livre disponible.</p>
+                {% endfor %}
+
+            </div>
+
+            <!-- PAGINATION -->
+            <nav class="d-flex justify-content-center mt-4">
+
+                <ul class="pagination pagination-sm">
+
+                    {% if books.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ books.previous_page_number }}&category={{ selected_category|default:'all' }}">
+                                « Prev
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Page {{ books.number }} / {{ books.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if books.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ books.next_page_number }}&category={{ selected_category|default:'all' }}">
+                                Next »
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+
+            </nav>
+
+        </div>
 
     </div>
 
-    <!-- PAGINATION -->
-    <nav>
-        <ul class="pagination justify-content-center">
-
-            {% if books.has_previous %}
-                <li class="page-item">
-                    <a class="page-link"
-                       href="?page={{ books.previous_page_number }}&category={{ selected_category }}">
-                        «
-                    </a>
-                </li>
-            {% endif %}
-
-            {% for num in books.paginator.page_range %}
-                <li class="page-item {% if books.number == num %}active{% endif %}">
-                    <a class="page-link"
-                       href="?page={{ num }}&category={{ selected_category }}">
-                        {{ num }}
-                    </a>
-                </li>
-            {% endfor %}
-
-            {% if books.has_next %}
-                <li class="page-item">
-                    <a class="page-link"
-                       href="?page={{ books.next_page_number }}&category={{ selected_category }}">
-                        »
-                    </a>
-                </li>
-            {% endif %}
-
-        </ul>
-    </nav>
-
 </div>
+
 {% endblock %}
