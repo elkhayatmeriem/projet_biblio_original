@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Contact
 
-def contact_view(request):
+
+def contact(request):
     if request.method == "POST":
         nom = request.POST.get("nom")
         email = request.POST.get("email")
@@ -16,7 +17,5 @@ def contact_view(request):
             )
             messages.success(request, "Message envoyé avec succès !")
             return redirect('contact')
-        else:
-            messages.error(request, "Tous les champs sont obligatoires.")
 
     return render(request, 'contact/contact.html')

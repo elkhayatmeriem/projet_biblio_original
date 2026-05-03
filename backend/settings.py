@@ -73,6 +73,7 @@ JAZZMIN_SETTINGS = {
         "contact",
         "users",
     ],
+    
 }
 
 MIDDLEWARE = [
@@ -114,18 +115,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-
-        'NAME': 'dbevente',
-        'USER':'root',
-        'PASSWORD':'root123',
-        'HOST':'localhost',
-        'PORT':'3307',
         'NAME': 'dbEvente',
-        'USER':'root',
-        'PASSWORD':'123456789qscqwerty',
-        'HOST':'localhost',
-        'PORT':'3306',
-
+        'USER': 'root',
+        'PASSWORD': '123456789qscqwerty',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

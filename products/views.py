@@ -299,8 +299,4 @@ def search_books(request):
         "query": query
     })
 
-def save(self, *args, **kwargs):
-    if self.isbn == "":
-        self.isbn = None
-    super().save(*args, **kwargs)
 

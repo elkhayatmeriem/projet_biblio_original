@@ -13,7 +13,7 @@ class Command(BaseCommand):
             "romance",
             "thriller",
             "fantasy",
-            "history",
+            "historical fiction",
             "business",
             "science fiction",
             "poetry",
@@ -30,10 +30,13 @@ class Command(BaseCommand):
             )
 
             url = f"https://openlibrary.org/search.json?q={cat_name}&limit=30"
-            response = requests.get(url)
 
-            if response.status_code != 200:
-                self.stdout.write(self.style.ERROR(f"Failed for {cat_name}"))
+            #  FIX 1: add timeout + error handling
+            try:
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                self.stdout.write(self.style.ERROR(f"{cat_name} failed: {e}"))
                 continue
 
             data = response.json()
@@ -43,25 +46,28 @@ class Command(BaseCommand):
             for item in data.get("docs", []):
 
                 title = item.get("title")
+                if not title:
+                    continue
+
                 authors = item.get("author_name", [])
                 author = ", ".join(authors) if authors else "Unknown"
 
                 isbn_list = item.get("isbn")
-
-                # ⚠️ FIX: generate fallback ID if no ISBN
                 isbn = isbn_list[0] if isbn_list else None
 
-                if not title:
-                    continue
+                #  FIX 2: safer duplicate check
+                if isbn:
+                    if Book.objects.filter(isbn=isbn).exists():
+                        continue
+                else:
+                    if Book.objects.filter(title=title, author=author).exists():
+                        continue
 
-                # better uniqueness check
-                if Book.objects.filter(title=title, author=author).exists():
-                    continue
-
+                #  FIX 3: never pass empty string for ISBN
                 Book.objects.create(
                     title=title,
                     author=author,
-                    isbn=isbn if isbn else "",
+                    isbn=isbn,   # keep None if missing
                     category=category,
                     available=True
                 )
