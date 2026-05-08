@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category, Book, Borrow
+from .models import Category, Book
+from accounts.models import Borrow
 
 
 # CATEGORY
@@ -22,9 +23,8 @@ class BookAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-# BORROW
 @admin.register(Borrow)
 class BorrowAdmin(admin.ModelAdmin):
-    list_display = ('student', 'book', 'borrow_date', 'return_date')
-    list_filter = ('borrow_date',)
-    search_fields = ('student',)
+    list_display = ('user', 'book', 'borrowed_at', 'returned')
+    list_filter = ('borrowed_at',)
+    search_fields = ('user__username', 'book__title')

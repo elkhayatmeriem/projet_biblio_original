@@ -142,7 +142,6 @@
                                 Indisponible
                             </span>
                         {% endif %}
-
                         {% if book.id %}
                             <a href="{% url 'book_detail' book.id %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
                                class="btn btn-purple w-100">

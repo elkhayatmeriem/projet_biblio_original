@@ -24,9 +24,17 @@
                 <p>{{ book.description }}</p>
             {% endif %}
 
-            <a href="javascript:history.back()" class="btn btn-secondary" >
-                Retour
-            </a>
+            <div class="d-flex gap-2 mt-3">
+    
+    <a href="javascript:history.back()" class="btn btn-secondary">
+        Retour
+    </a>
+
+    <a href="{% url 'add_to_cart' book.id %}" class="btn btn-primary">
+        Ajouter au panier
+    </a>
+
+</div>
 
         </div>
 

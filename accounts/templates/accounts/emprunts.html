@@ -1,0 +1,101 @@
+{% extends "base/base.html" %}
+
+{% block title %}Mes emprunts{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Mes emprunts</h2>
+
+    {% if borrows %}
+
+        <table class="table table-bordered align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Date emprunt</th>
+                    <th>Pénalité</th>
+                    <th>Statut</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for b in borrows %}
+                <tr>
+
+                    <!-- TITRE -->
+                    <td>{{ b.book.title }}</td>
+
+                    <!-- AUTEUR -->
+                    <td>{{ b.book.author }}</td>
+
+                    <!-- DATE -->
+                    <td>{{ b.borrowed_at }}</td>
+
+                    <!-- PENALITE -->
+                    <td>
+                        {% if b.penalty %}
+                            {{ b.penalty }} DH
+                        {% else %}
+                            0 DH
+                        {% endif %}
+                    </td>
+
+                    <!-- STATUT -->
+                    <td>
+                        {% if b.returned %}
+                            <span class="badge bg-success">
+                                Retourné
+                            </span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">
+                                En cours
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <!-- BOUTON RETOURNER -->
+                    <td>
+
+                        {% if not b.returned %}
+
+                            <a href="{% url 'retourner' b.id %}"
+                               class="btn btn-sm btn-danger">
+
+                                Retourner
+
+                            </a>
+
+                        {% else %}
+
+                            <button class="btn btn-sm btn-secondary" disabled>
+                                Déjà retourné
+                            </button>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            Aucun emprunt pour le moment
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

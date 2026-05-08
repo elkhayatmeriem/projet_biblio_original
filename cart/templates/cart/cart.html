@@ -6,7 +6,7 @@
 
 <div class="container mt-4">
 
-    <h2 class="mb-4"> Mon panier</h2>
+    <h2 class="mb-4">🛒 Mon panier</h2>
 
     {% if cart_items %}
 
@@ -18,7 +18,7 @@
                     <th>Titre</th>
                     <th>Auteur</th>
                     <th>Quantité</th>
-                    <th>Action</th>
+                    <th style="width: 1%; white-space: nowrap;">Action</th>
                 </tr>
             </thead>
 
@@ -30,28 +30,63 @@
 
                     <!-- IMAGE -->
                     <td style="width: 100px;">
-                        {% if item.image %}
-                            <img src="{{ item.image }}" class="img-fluid rounded" style="max-height: 80px;">
+
+                        {% if item.book and item.book.image %}
+                            <img src="{{ item.book.image.url }}"
+                                 class="img-fluid rounded"
+                                 style="max-height: 80px;">
                         {% else %}
                             <span>No image</span>
                         {% endif %}
+
                     </td>
 
                     <!-- TITLE -->
-                    <td>{{ item.title }}</td>
+                    <td>
+                        {% if item.book %}
+                            {{ item.book.title }}
+                        {% else %}
+                            {{ item.title }}
+                        {% endif %}
+                    </td>
 
                     <!-- AUTHOR -->
-                    <td>{{ item.author }}</td>
+                    <td>
+                        {% if item.book %}
+                            {{ item.book.author }}
+                        {% else %}
+                            {{ item.author }}
+                        {% endif %}
+                    </td>
 
                     <!-- QUANTITY -->
                     <td>{{ item.quantity }}</td>
 
-                    <!-- REMOVE BUTTON -->
-                    <td>
-                        <a href="{% url 'remove_from_cart' item.id %}"
-                           class="btn btn-sm btn-danger">
-                            Remove
-                        </a>
+                    <!-- ACTION -->
+                    <td style="white-space: nowrap; width: 1%;">
+
+                        <div class="d-flex gap-2 align-items-center">
+
+                            <!-- REMOVE -->
+                            <a href="{% url 'remove_from_cart' item.id %}"
+                               class="btn btn-sm btn-danger">
+                                Remove
+                            </a>
+
+                            <!-- EMPRUNTER / CONNECT -->
+                            {% if user.is_authenticated %}
+                              <a href="{% url 'emprunter' item.id %}" class="btn btn-success">
+                                Emprunter
+                              </a>
+                            {% else %}
+                                <a href="{% url 'accounts:login' %}"
+                                   class="btn btn-sm btn-primary">
+                                    Connectez-vous pour emprunter
+                                </a>
+                            {% endif %}
+
+                        </div>
+
                     </td>
 
                 </tr>
@@ -69,10 +104,11 @@
 
     {% else %}
 
-        <div class="alert alert-info"
-     style="background-color:#e6dcff; color:#3b1b7a; border-color:#c9b6ff;">
-    Ton panier est vide 
-</div>
+        <div class="alert"
+             style="background-color:#e6dcff; color:#3b1b7a; border:none;">
+            Ton panier est vide
+        </div>
+
     {% endif %}
 
 </div>

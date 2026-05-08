@@ -232,15 +232,35 @@ body {
 
         <ul class="navbar-nav ms-auto align-items-center">
 
-            <li class="nav-item">
-    <a class="nav-link"
+<li class="nav-item d-flex align-items-center gap-2">
+
+    <!-- ICONE SIDEBAR -->
+    <a class="nav-link position-relative"
        href="#"
        data-bs-toggle="offcanvas"
-       data-bs-target="#cartSidebar"style="font-weight: 400; font-size:large ;">
-        Mon panier
+       data-bs-target="#cartSidebar"
+       style="font-size: 22px;">
+
+        🛒
+
+        {% if total_items > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ total_items }}
+        </span>
+        {% endif %}
+
     </a>
+
+    <!-- PAGE CART -->
+    <a class="nav-link"
+       href="{% url 'cart' %}"
+       style="font-weight: 400; font-size:large ;">
+
+        Mon panier
+
+    </a>
+
 </li>
-<!-- REMPLACE CETTE PARTIE -->
 <li class="nav-item dropdown">
 {% if user.is_authenticated %}
 
@@ -266,18 +286,17 @@ body {
         </li>
 
         <!-- MES EMPRUNTS -->
-        <li>
-            <a class="dropdown-item" href="">
-                 Mes emprunts
-            </a>
-        </li>
+       <li>
+    <a class="dropdown-item" href="{% url 'accounts:emprunts' %}">
+         Mes emprunts
+    </a>
+</li>
 
-        <!-- MES PENALITES -->
-        <li>
-            <a class="dropdown-item" href="">
-                 Mes pénalités
-            </a>
-        </li>
+<li>
+    <a class="dropdown-item" href="{% url 'accounts:penalites' %}">
+         Mes pénalités
+    </a>
+</li>
 
         <li><hr class="dropdown-divider"></li>
 
@@ -330,6 +349,16 @@ body {
 
     </div>
 </nav>
+{% if messages %}
+<div class="container mt-2">
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 <!-- CAROUSEL -->
 {% if request.path == "/" %}
@@ -448,21 +477,92 @@ body {
 
         {% if cart_items %}
 
-            {% for item in cart_items %}
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <strong>{{ item.title }}</strong><br>
-                        <small>Qty: {{ item.quantity }}</small>
-                    </div>
+           {% for item in cart_items %}
 
-                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">
-                        ✕
-                    </a>
+<div class="d-flex justify-content-between align-items-start mb-3">
+
+    <div class="d-flex gap-2">
+
+        {% if item.book.image %}
+            <img src="{{ item.book.image.url }}"
+                 width="55"
+                 height="75"
+                 style="object-fit:cover; border-radius:8px;">
+        {% endif %}
+
+        <div>
+
+            <strong>
+
+                {% if item.book %}
+                    {{ item.book.title }}
+                {% else %}
+                    {{ item.title }}
+                {% endif %}
+
+            </strong>
+
+            <br>
+
+            <small class="text-muted">
+                Qty: {{ item.quantity }}
+            </small>
+
+        </div>
+
+    </div>
+
+                   {% if item.id %}
+    <a href="{% url 'remove_from_cart' item.id %}"
+   class="btn btn-sm btn-outline-danger rounded-circle">
+    ✕
+    </a>
+{% else %}
+    <button class="btn btn-sm btn-danger" disabled>
+        ✕
+    </button>
+{% endif %}
                 </div>
                 <hr>
             {% endfor %}
 
             <p class="fw-bold">Total items: {{ total_items }}</p>
+            <div class="d-grid gap-2 mt-3">
+
+    <a href="{% url 'cart' %}"
+       class="btn btn-dark">
+        Voir le panier
+    </a>
+
+ {% if user.is_authenticated %}
+
+    {% if cart_items %}
+
+        {% for item in cart_items %}
+            <a href="{% url 'emprunter' item.id %}" class="btn btn-warning">
+                Emprunter
+            </a>
+        {% endfor %}
+
+    {% else %}
+
+        <div class="alert" style="background:#fcd0db; color:#4c358b; border:none;">
+            Ton panier est vide
+        </div>
+
+    {% endif %}
+
+{% else %}
+
+    <a href="{% url 'accounts:login' %}" class="btn btn-warning">
+        Connexion pour emprunter
+    </a>
+
+{% endif %}
+
+
+
+</div>
 
         {% else %}
 

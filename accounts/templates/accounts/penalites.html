@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+
+{% block title %}Mes pénalités{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>⚠️ Mes pénalités</h2>
+
+    {% if total_penalty > 0 %}
+
+        <div class="card mt-3 p-4 border-danger">
+
+            <h4 class="text-danger">
+                Total pénalité : {{ total_penalty }} DH
+            </h4>
+
+            <p class="mt-2">
+                ⚠️ Les pénalités sont calculées automatiquement après 7 jours de retard.
+            </p>
+
+        </div>
+
+    {% else %}
+
+        <div class="card mt-3 p-4 border-success">
+
+            <h4 class="text-success">
+                🎉 Aucune pénalité
+            </h4>
+
+            <p class="mt-2">
+                Vous êtes à jour dans vos emprunts.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
