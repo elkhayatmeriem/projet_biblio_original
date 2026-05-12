@@ -6,93 +6,156 @@
 
 <div class="container mt-4">
 
-    <h2 class="mb-4">Mes emprunts</h2>
+    <h2 class="mb-4" style="color:#700143; font-weight:700;">
+        Mes emprunts
+    </h2>
 
     {% if borrows %}
 
-        <table class="table table-bordered align-middle">
+    <div class="table-responsive">
 
-            <thead class="table-dark">
+        <table class="table table-bordered table-hover align-middle shadow-sm">
+
+            <thead>
                 <tr>
-                    <th>Titre</th>
-                    <th>Auteur</th>
-                    <th>Date emprunt</th>
-                    <th>Pénalité</th>
-                    <th>Statut</th>
-                    <th>Action</th>
+                    <th style="background:#700143 !important; color:white !important;">Livre</th>
+                    <th style="background:#700143 !important; color:white !important;">Auteur</th>
+                    <th style="background:#700143 !important; color:white !important;">Date emprunt</th>
+                    <th style="background:#700143 !important; color:white !important;">Retour prévu</th>
+                    <th style="background:#700143 !important; color:white !important;">Date retour</th>
+                    <th style="background:#700143 !important; color:white !important;">Statut</th>
+                    <th style="background:#700143 !important; color:white !important;">Sanction</th>
+                    <th style="background:#700143 !important; color:white !important;">Notification</th>
+                    <th style="background:#700143 !important; color:white !important; width:140px; text-align:center;">
+                        Action
+                    </th>
                 </tr>
             </thead>
 
             <tbody>
 
                 {% for b in borrows %}
+
                 <tr>
 
-                    <!-- TITRE -->
-                    <td>{{ b.book.title }}</td>
-
-                    <!-- AUTEUR -->
-                    <td>{{ b.book.author }}</td>
-
-                    <!-- DATE -->
-                    <td>{{ b.borrowed_at }}</td>
-
-                    <!-- PENALITE -->
                     <td>
-                        {% if b.penalty %}
-                            {{ b.penalty }} DH
+                        {% if b.book %}
+                            {{ b.book.title }}
                         {% else %}
-                            0 DH
+                            Livre supprimé
                         {% endif %}
                     </td>
 
-                    <!-- STATUT -->
+                    <td>
+                        {% if b.book %}
+                            {{ b.book.author }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ b.borrowed_at|date:"d/m/Y H:i" }}
+                    </td>
+
+                    <td>
+                        {{ b.due_date|date:"d/m/Y H:i" }}
+                    </td>
+
+                    <td>
+                        {% if b.returned_at %}
+                            {{ b.returned_at|date:"d/m/Y H:i" }}
+                        {% else %}
+                            <span class="text-muted">Non retourné</span>
+                        {% endif %}
+                    </td>
+
                     <td>
                         {% if b.returned %}
-                            <span class="badge bg-success">
+                            <span class="badge"
+                                  style="background:#700143; color:white; padding:8px 14px; border-radius:20px;">
                                 Retourné
                             </span>
                         {% else %}
-                            <span class="badge bg-warning text-dark">
+                            <span class="badge"
+                                  style="background:#fcd0db; color:#700143; padding:8px 14px; border-radius:20px;">
                                 En cours
                             </span>
                         {% endif %}
                     </td>
 
-                    <!-- BOUTON RETOURNER -->
                     <td>
-
-                        {% if not b.returned %}
-
-                            <a href="{% url 'retourner' b.id %}"
-                               class="btn btn-sm btn-danger">
-
-                                Retourner
-
-                            </a>
-
+                        {% if b.blocked_until %}
+                            <span style="color:#700143; font-weight:600;">
+                                Bloqué jusqu'au {{ b.blocked_until|date:"d/m/Y H:i" }}
+                            </span>
                         {% else %}
+                            <span style="color:#198754; font-weight:600;">
+                                Aucune sanction
+                            </span>
+                        {% endif %}
+                    </td>
 
+                    <td>
+                        {% if b.notification %}
+                            <span style="color:#700143;">
+                                {{ b.notification }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted">
+                                Aucune notification
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if not b.returned %}
+                            <a href="{% url 'retourner' b.id %}"
+                               class="btn btn-sm fw-bold"
+                               style="background:#700143; color:white !important; border-radius:25px; padding:8px 22px; border:none; font-size:15px;">
+                                Retourner
+                            </a>
+                        {% else %}
                             <button class="btn btn-sm btn-secondary" disabled>
                                 Déjà retourné
                             </button>
-
                         {% endif %}
-
                     </td>
 
                 </tr>
+
                 {% endfor %}
 
             </tbody>
 
         </table>
 
+    </div>
+
     {% else %}
 
-        <div class="alert alert-info">
-            Aucun emprunt pour le moment
+    <div class="card shadow-sm border-0 p-5 text-center"
+         style="background:#fff0f5; border-radius:20px;">
+
+        <div style="font-size:60px;">
+            📚
         </div>
+
+        <h4 class="mt-3" style="color:#700143; font-weight:700;">
+            Aucun emprunt trouvé
+        </h4>
+
+        <p class="text-muted mt-2">
+            Vous n'avez encore emprunté aucun livre.
+        </p>
+
+        <a href="/products/"
+           class="btn mt-3"
+           style="background:#700143; color:white; border-radius:30px; padding:10px 25px;">
+            Découvrir les livres
+        </a>
+
+    </div>
 
     {% endif %}
 

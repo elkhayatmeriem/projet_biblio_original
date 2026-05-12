@@ -113,29 +113,27 @@ def calculate_penalty(borrow):
 # -------------------------
 @login_required
 def emprunts(request):
-    borrows = Borrow.objects.filter(user=request.user)
 
-    for b in borrows:
-        b.penalty = calculate_penalty(b)
+    borrows = Borrow.objects.filter(
+        user=request.user
+    ).order_by('-borrowed_at')
 
     return render(request, "accounts/emprunts.html", {
         "borrows": borrows
     })
-
 
 # -------------------------
 # MES PÉNALITÉS
 # -------------------------
 @login_required
 def penalites(request):
-    borrows = Borrow.objects.filter(user=request.user)
-
-    total_penalty = 0
-    for b in borrows:
-        total_penalty += calculate_penalty(b)
+    borrows = Borrow.objects.filter(
+        user=request.user,
+        sanction_applied=True
+    ).order_by('-borrowed_at')
 
     return render(request, "accounts/penalites.html", {
-        "total_penalty": total_penalty
+        "borrows": borrows
     })
 
 

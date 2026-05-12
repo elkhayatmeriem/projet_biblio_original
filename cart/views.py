@@ -1,19 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import timedelta
 
 from products.models import Book
 from accounts.models import Borrow
 from .models import CartItem
 
 
-# =========================
-# PANIER
-# =========================
 def cart_view(request):
 
     if request.user.is_authenticated:
-
         items = CartItem.objects.filter(user=request.user)
         total = sum(item.quantity for item in items)
 
@@ -23,23 +21,17 @@ def cart_view(request):
             "session_cart": False
         })
 
-    else:
+    cart = request.session.get("cart", {})
+    items = list(cart.values())
+    total = sum(item.get("quantity", 1) for item in items)
 
-        cart = request.session.get("cart", {})
-        items = list(cart.values())
-
-        total = sum(item.get("quantity", 1) for item in items)
-
-        return render(request, "cart/cart.html", {
-            "cart_items": items,
-            "total_items": total,
-            "session_cart": True
-        })
+    return render(request, "cart/cart.html", {
+        "cart_items": items,
+        "total_items": total,
+        "session_cart": True
+    })
 
 
-# =========================
-# AJOUTER AU PANIER
-# =========================
 def add_to_cart(request, book_id):
 
     book = get_object_or_404(Book, id=book_id)
@@ -76,13 +68,10 @@ def add_to_cart(request, book_id):
         request.session["cart"] = cart
         request.session.modified = True
 
-    messages.success(request, "📚 Livre ajouté au panier !")
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
+    messages.success(request, "Livre ajouté au panier")
+    return redirect(request.META.get("HTTP_REFERER", "home"))
 
 
-# =========================
-# SUPPRIMER DU PANIER
-# =========================
 def remove_from_cart(request, item_id):
 
     if request.user.is_authenticated:
@@ -102,13 +91,10 @@ def remove_from_cart(request, item_id):
         request.session["cart"] = cart
         request.session.modified = True
 
-    messages.success(request, "🗑️ Livre supprimé du panier")
-    return redirect('cart')
+    messages.success(request, "Livre supprimé")
+    return redirect("cart")
 
 
-# =========================
-# EMPRUNTER (CORRIGÉ)
-# =========================
 @login_required
 def emprunter(request, item_id):
 
@@ -118,27 +104,38 @@ def emprunter(request, item_id):
         user=request.user
     )
 
-    # créer emprunt
+    book = item.book
+
+    if not book.available:
+        messages.error(request, "Livre indisponible")
+        return redirect("cart")
+
+    blocked = Borrow.objects.filter(
+        user=request.user,
+        blocked_until__gt=timezone.now()
+    ).first()
+
+    if blocked:
+        messages.error(
+            request,
+            f"Compte bloqué jusqu'au {blocked.blocked_until.strftime('%d/%m/%Y %H:%M')}"
+        )
+        return redirect("accounts:emprunts")
+
     Borrow.objects.create(
         user=request.user,
-        book=item.book,
-        returned=False
+        book=book
     )
 
-    # rendre livre indisponible
-    item.book.available = False
-    item.book.save()
+    book.available = False
+    book.save()
 
-    # supprimer du panier
     item.delete()
 
-    messages.success(request, "📚 Livre emprunté avec succès !")
-    return redirect('cart')
+    messages.success(request, "Livre emprunté avec succès")
+    return redirect("accounts:emprunts")
 
 
-# =========================
-# RETOURNER LIVRE
-# =========================
 @login_required
 def retourner(request, borrow_id):
 
@@ -148,11 +145,36 @@ def retourner(request, borrow_id):
         user=request.user
     )
 
+    if borrow.returned:
+        messages.warning(request, "Livre déjà retourné")
+        return redirect("accounts:emprunts")
+
     borrow.returned = True
+    borrow.returned_at = timezone.now()
+
+    days = (borrow.returned_at - borrow.borrowed_at).days
+
+    if days > 7:
+        retard = days - 7
+
+        borrow.blocked_days = retard * 2
+        borrow.blocked_until = timezone.now() + timedelta(days=borrow.blocked_days)
+        borrow.sanction_applied = True
+        borrow.notification = f"Retard détecté : compte bloqué {borrow.blocked_days} jours."
+
+        messages.error(
+            request,
+            f"Retard détecté. Votre compte est bloqué pendant {borrow.blocked_days} jours."
+        )
+
+    else:
+        borrow.notification = "Retour validé avec succès"
+        messages.success(request, "Retour validé avec succès")
+
     borrow.save()
 
-    borrow.book.available = True
-    borrow.book.save()
+    if borrow.book:
+        borrow.book.available = True
+        borrow.book.save()
 
-    messages.success(request, "📚 Livre retourné avec succès !")
-    return redirect('accounts:emprunts')
+    return redirect("accounts:emprunts")

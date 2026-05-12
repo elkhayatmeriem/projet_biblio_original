@@ -1,18 +1,66 @@
-
 {% extends "base/base.html" %}
 
 {% block title %}Liste des livres{% endblock %}
 
-{% block content %}
+    {% block content %}
 
-<style>
+ <style>
 .pagination .page-item.active .page-link {
     background-color: #5f082a !important;
     border-color: #5f082a !important;
     color: white !important;
 }
+
 .pagination .page-link {
     color: #5f082a;
+}
+
+.book-card {
+    height: 100%;
+    min-height: 470px;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+.book-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-title {
+    min-height: 45px;
+    max-height: 45px;
+    overflow: hidden;
+    font-size: 17px;
+    line-height: 1.3;
+}
+
+.book-author {
+    min-height: 55px;
+    max-height: 55px;
+    overflow: hidden;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.book-category {
+    min-height: 35px;
+    font-size: 16px;
+}
+
+.book-footer {
+    margin-top: auto;
+}
+
+.book-footer .btn {
+    border-radius: 25px;
 }
 </style>
 
@@ -20,7 +68,6 @@
 
     <div class="row">
 
-        <!-- ================= SIDEBAR ================= -->
         <div class="col-md-3">
 
             <div class="card p-3 shadow-sm mb-3">
@@ -31,49 +78,20 @@
 
                 <hr>
 
-                <a href="{% url 'books' %}?category=all"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Tous les livres
-                </a>
-
-                <a href="{% url 'books' %}?category=fiction"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Fiction
-                </a>
-
-                <a href="{% url 'books' %}?category=science-fiction"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Science Fiction
-                </a>
-
-                <a href="{% url 'books' %}?category=fantasy"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Fantasy
-                </a>
-
-                <a href="{% url 'books' %}?category=manga"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Manga
-                </a>
-
-                <a href="{% url 'books' %}?category=Historical-Fiction"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Historical Fiction
-                </a>
-
-                <a href="{% url 'books' %}?category=romance"
-                   class="d-block mb-2 text-decoration-none text-dark">
-                    Romance
-                </a>
+                <a href="{% url 'books' %}?category=all" class="d-block mb-2 text-decoration-none text-dark">Tous les livres</a>
+                <a href="{% url 'books' %}?category=fiction" class="d-block mb-2 text-decoration-none text-dark">Fiction</a>
+                <a href="{% url 'books' %}?category=science-fiction" class="d-block mb-2 text-decoration-none text-dark">Science Fiction</a>
+                <a href="{% url 'books' %}?category=fantasy" class="d-block mb-2 text-decoration-none text-dark">Fantasy</a>
+                <a href="{% url 'books' %}?category=manga" class="d-block mb-2 text-decoration-none text-dark">Manga</a>
+                <a href="{% url 'books' %}?category=Historical-Fiction" class="d-block mb-2 text-decoration-none text-dark">Historical Fiction</a>
+                <a href="{% url 'books' %}?category=romance" class="d-block mb-2 text-decoration-none text-dark">Romance</a>
 
             </div>
 
         </div>
 
-        <!-- ================= MAIN CONTENT ================= -->
         <div class="col-md-9">
 
-            <!-- BREADCRUMB -->
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
 
@@ -97,7 +115,6 @@
                 </ol>
             </nav>
 
-            <!-- TITLE -->
             <h1 class="mb-4">
                 {% if selected_category %}
                     {{ selected_category|title|cut:"-" }}
@@ -106,66 +123,86 @@
                 {% endif %}
             </h1>
 
-            <!-- BOOK GRID -->
             <div class="row">
 
                 {% for book in books %}
 
                 <div class="col-md-4 mb-4">
 
-                    <div class="border rounded shadow-sm h-100 p-3 text-center">
+                    <div class="border rounded shadow-sm p-3 text-center book-card">
 
-                        {% if book.image %}
-                            <img src="{{ book.image }}"
-                                 class="img-fluid rounded mb-3"
-                                 style="height: 220px; object-fit: cover;">
-                        {% else %}
-                            <img src="/static/images/no_cover.png"
-                                 class="img-fluid rounded mb-3"
-                                 style="height: 220px; object-fit: cover;">
-                        {% endif %}
+                       {% if book.image %}
+    <img src="{{ book.image.url }}"
+         class="img-fluid rounded mb-3 book-img">
 
-                        <h5 class="fw-bold">{{ book.title }}</h5>
+{% elif book.image_url %}
+    <img src="{{ book.image_url }}"
+         class="img-fluid rounded mb-3 book-img">
 
-                        <p><strong>Auteur:</strong> {{ book.author }}</p>
+{% else %}
+    <img src="/static/images/no_cover.png"
+         class="img-fluid rounded mb-3 book-img">
+{% endif %}
 
-                        <p><strong>Catégorie:</strong> {{ book.category }}</p>
+                        <div class="book-body">
 
-                        {% if book.available %}
-                            <span class="badge mb-3"
-                                  style="background:#28a745; color:white;">
-                                Disponible
-                            </span>
-                        {% else %}
-                            <span class="badge mb-3"
-                                  style="background:#dc3545; color:white;">
-                                Indisponible
-                            </span>
-                        {% endif %}
-                        {% if book.id %}
-                            <a href="{% url 'book_detail' book.id %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
-                               class="btn btn-purple w-100">
-                                Voir détails
-                            </a>
+                            <h5 class="fw-bold book-title">
+                                {{ book.title }}
+                            </h5>
 
-                        {% elif book.isbn %}
-                            <a href="{% url 'external_book_detail' book.isbn %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
-                               class="btn btn-purple w-100">
-                                Voir détails
-                            </a>
-                        {% endif %}
+                            <p class="book-author">
+                                <strong>Auteur:</strong>
+                                {{ book.author }}
+                            </p>
+
+                            <p class="book-category">
+                                <strong>Catégorie:</strong>
+                                {{ book.category }}
+                            </p>
+
+                            <div class="book-footer">
+
+                                {% if book.available %}
+                                    <span class="badge mb-3"
+                                          style="background:#28a745; color:white;">
+                                        Disponible
+                                    </span>
+                                {% else %}
+                                    <span class="badge mb-3"
+                                          style="background:#dc3545; color:white;">
+                                        Indisponible
+                                    </span>
+                                {% endif %}
+
+                                {% if book.id %}
+                                    <a href="{% url 'book_detail' book.id %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
+                                       class="btn btn-purple w-100">
+                                        Voir détails
+                                    </a>
+
+                                {% elif book.isbn %}
+                                    <a href="{% url 'external_book_detail' book.isbn %}?page={{ books.number }}&category={{ selected_category|default:'all' }}"
+                                       class="btn btn-purple w-100">
+                                        Voir détails
+                                    </a>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
 
                 {% empty %}
+
                     <p>Aucun livre disponible.</p>
+
                 {% endfor %}
 
             </div>
 
-            <!-- PAGINATION -->
             <nav class="d-flex justify-content-center mt-4">
 
                 <ul class="pagination pagination-sm">

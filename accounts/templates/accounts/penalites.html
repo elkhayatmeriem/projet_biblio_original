@@ -6,33 +6,73 @@
 
 <div class="container mt-4">
 
-    <h2>⚠️ Mes pénalités</h2>
+    <h2 class="mb-4" style="color:#700143; font-weight:700;">
+        Mes pénalités
+    </h2>
 
-    {% if total_penalty > 0 %}
+    {% if borrows %}
 
-        <div class="card mt-3 p-4 border-danger">
+        {% for b in borrows %}
 
-            <h4 class="text-danger">
-                Total pénalité : {{ total_penalty }} DH
-            </h4>
+            {% if b.sanction_applied %}
 
-            <p class="mt-2">
-                ⚠️ Les pénalités sont calculées automatiquement après 7 jours de retard.
-            </p>
+            <div class="card shadow-sm border-0 mb-4"
+                 style="border-radius:18px; overflow:hidden;">
 
-        </div>
+                <div style="background:#700143; color:white; padding:16px 24px;">
+                    <h4 class="mb-0">Compte bloqué</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <p>
+                        <strong>Livre :</strong>
+                        {% if b.book %}{{ b.book.title }}{% else %}Livre supprimé{% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Durée du blocage :</strong>
+                        {{ b.blocked_days }} jours
+                    </p>
+
+                    <p>
+                        <strong>Bloqué jusqu'au :</strong>
+                        {{ b.blocked_until|date:"d/m/Y H:i" }}
+                    </p>
+
+                    <p class="mb-0" style="color:#700143;">
+                        <strong>Notification :</strong>
+                        {{ b.notification }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
 
     {% else %}
 
-        <div class="card mt-3 p-4 border-success">
+        <div class="card shadow-sm border-0 text-center p-5"
+             style="background:#fff0f5; border-radius:22px;">
 
-            <h4 class="text-success">
-                🎉 Aucune pénalité
-            </h4>
+            <div style="font-size:60px;">✅</div>
 
-            <p class="mt-2">
+            <h3 class="mt-3" style="color:#700143; font-weight:700;">
+                Aucune sanction
+            </h3>
+
+            <p class="text-muted mt-2">
                 Vous êtes à jour dans vos emprunts.
             </p>
+
+            <a href="{% url 'accounts:emprunts' %}"
+               class="btn mt-3"
+               style="background:#700143; color:white; border-radius:30px; padding:10px 25px;">
+                Voir mes emprunts
+            </a>
 
         </div>
 

@@ -15,13 +15,23 @@
                     <li>Mon compte
                  </li>
                  <hr>
-                    <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-dark">Mes emprunts</a>
-                    </li>
+               <li class="mb-2">
+              <a href="{% url 'accounts:emprunts' %}"
+               class="text-decoration-none text-dark">
 
-                    <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-dark">Mes penalites</a>
-                    </li>
+                Mes emprunts
+
+             </a>
+              </li>
+
+                <li class="mb-2">
+                  <a href="{% url 'accounts:penalites' %}"
+                   class="text-decoration-none text-dark">
+
+                  Mes penalites
+
+                  </a>
+               </li>
 
                     <hr>
 
